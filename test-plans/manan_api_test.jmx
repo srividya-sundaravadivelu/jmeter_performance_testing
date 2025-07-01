@@ -667,55 +667,6 @@
             </GaussianRandomTimer>
             <hashTree/>
           </hashTree>
-          <JMeter.plugins.functional.samplers.websocket.WebSocketSampler guiclass="JMeter.plugins.functional.samplers.websocket.WebSocketSamplerGui" testclass="JMeter.plugins.functional.samplers.websocket.WebSocketSampler" testname="WebSocket Sampler">
-            <stringProp name="serverAddress">${BASE_URL}</stringProp>
-            <stringProp name="serverPort">443</stringProp>
-            <stringProp name="implementation">RFC6455 (v13)</stringProp>
-            <stringProp name="protocol">wss</stringProp>
-            <stringProp name="contextPath">/monitor</stringProp>
-            <stringProp name="contentEncoding">UTF-8</stringProp>
-            <stringProp name="requestPayload">{&quot;type&quot;: &quot;document_update&quot;,&quot;text&quot;: &quot;Patient presents with fever 102F, cough for 5 days&quot;, &quot;source&quot;: &quot;client&quot;}</stringProp>
-            <stringProp name="connectionTimeout">30000</stringProp>
-            <stringProp name="responseTimeout">30000</stringProp>
-            <boolProp name="ignoreSslErrors">false</boolProp>
-            <boolProp name="streamingConnection">false</boolProp>
-            <stringProp name="connectionId"></stringProp>
-            <stringProp name="responsePattern"></stringProp>
-            <stringProp name="closeConncectionPattern"></stringProp>
-            <stringProp name="proxyAddress"></stringProp>
-            <stringProp name="proxyPassword"></stringProp>
-            <stringProp name="proxyPort"></stringProp>
-            <stringProp name="proxyUsername"></stringProp>
-            <stringProp name="messageBacklog">3</stringProp>
-            <elementProp name="queryStringParameters" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
-              <collectionProp name="Arguments.arguments"/>
-            </elementProp>
-          </JMeter.plugins.functional.samplers.websocket.WebSocketSampler>
-          <hashTree>
-            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Validate Analysis Update Type" enabled="false">
-              <stringProp name="JSON_PATH">$.type</stringProp>
-              <stringProp name="EXPECTED_VALUE">analysis_update</stringProp>
-              <boolProp name="JSONVALIDATION">true</boolProp>
-              <boolProp name="EXPECT_NULL">false</boolProp>
-              <boolProp name="INVERT">false</boolProp>
-              <boolProp name="ISREGEX">false</boolProp>
-            </JSONPathAssertion>
-            <hashTree/>
-            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
-              <stringProp name="ConstantTimer.delay">30000</stringProp>
-              <stringProp name="RandomTimer.range">2000</stringProp>
-            </GaussianRandomTimer>
-            <hashTree/>
-          </hashTree>
-          <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="WebSocket Open Connection" enabled="false">
-            <boolProp name="TLS">true</boolProp>
-            <stringProp name="server">${BASE_URL}</stringProp>
-            <stringProp name="port">443</stringProp>
-            <stringProp name="path">/monitor</stringProp>
-            <stringProp name="connectTimeout">20000</stringProp>
-            <stringProp name="readTimeout">6000</stringProp>
-          </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
-          <hashTree/>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="logout">
             <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
             <stringProp name="HTTPSampler.protocol">https</stringProp>

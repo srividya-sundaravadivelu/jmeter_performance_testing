@@ -1,0 +1,820 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan">
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group">
+        <intProp name="ThreadGroup.num_threads">35</intProp>
+        <intProp name="ThreadGroup.ramp_time">35</intProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
+          <stringProp name="LoopController.loops">1</stringProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config">
+          <stringProp name="delimiter">,</stringProp>
+          <stringProp name="fileEncoding"></stringProp>
+          <stringProp name="filename">C:/Users/srivi/Downloads/jmeter project/users.csv</stringProp>
+          <boolProp name="ignoreFirstLine">true</boolProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">false</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+          <boolProp name="stopThread">true</boolProp>
+          <stringProp name="variableNames">username,password,email</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once Only Controller" enabled="false"/>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="register">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/register</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+  &quot;username&quot;: &quot;${username}&quot;,&#xd;
+  &quot;password&quot;: &quot;${password}&quot;,&#xd;
+  &quot;email&quot;:&quot;${email}&quot;&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion" enabled="false">
+              <stringProp name="JSON_PATH">$.message</stringProp>
+              <stringProp name="EXPECTED_VALUE">Registration successful</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login">
+          <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.path">/api/login</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;username&quot;: &quot;${username}&quot;,&#xd;
+  &quot;password&quot;: &quot;${password}&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion">
+            <stringProp name="JSON_PATH">$.message</stringProp>
+            <stringProp name="EXPECTED_VALUE">Login successful</stringProp>
+            <boolProp name="JSONVALIDATION">true</boolProp>
+            <boolProp name="EXPECT_NULL">false</boolProp>
+            <boolProp name="INVERT">false</boolProp>
+            <boolProp name="ISREGEX">true</boolProp>
+          </JSONPathAssertion>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">if (prev.getResponseCode().equals(&quot;200&quot;)) {
+    vars.put(&quot;login_success&quot;, &quot;true&quot;);
+} else {
+    vars.put(&quot;login_success&quot;, &quot;false&quot;);
+}</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller">
+          <stringProp name="IfController.condition">${login_success}</stringProp>
+          <boolProp name="IfController.evaluateAll">true</boolProp>
+          <boolProp name="IfController.useExpression">true</boolProp>
+        </IfController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="status">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/auth/status</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">3000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="user">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/user</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion">
+              <stringProp name="JSON_PATH">$.username</stringProp>
+              <stringProp name="EXPECTED_VALUE">${username}</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">3000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="view subscription details">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/subscription</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor">
+              <stringProp name="JSONPostProcessor.referenceNames">isActive</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.active</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="false">
+            <boolProp name="displayJMeterProperties">false</boolProp>
+            <boolProp name="displayJMeterVariables">true</boolProp>
+            <boolProp name="displaySystemProperties">false</boolProp>
+          </DebugSampler>
+          <hashTree/>
+          <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller">
+            <stringProp name="IfController.condition">${__groovy(!&quot;${isActive}&quot;.toBoolean())}</stringProp>
+            <boolProp name="IfController.evaluateAll">true</boolProp>
+            <boolProp name="IfController.useExpression">true</boolProp>
+          </IfController>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="create-checkout-session">
+              <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+              <stringProp name="HTTPSampler.protocol">https</stringProp>
+              <stringProp name="HTTPSampler.path">/api/create-checkout-session</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                <collectionProp name="Arguments.arguments"/>
+              </elementProp>
+            </HTTPSamplerProxy>
+            <hashTree>
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion">
+                <collectionProp name="Asserion.test_strings">
+                  <stringProp name="-1061145895">https://checkout.stripe.com</stringProp>
+                </collectionProp>
+                <stringProp name="Assertion.custom_message"></stringProp>
+                <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+                <boolProp name="Assertion.assume_success">false</boolProp>
+                <intProp name="Assertion.test_type">2</intProp>
+              </ResponseAssertion>
+              <hashTree/>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="sessionId">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">sessionId</stringProp>
+                <stringProp name="RegexExtractor.regex">cs_test_[a-zA-Z0-9]+</stringProp>
+                <stringProp name="RegexExtractor.template">$0$</stringProp>
+                <stringProp name="RegexExtractor.default">NOT_FOUND</stringProp>
+                <boolProp name="RegexExtractor.default_empty_value">false</boolProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
+              <hashTree/>
+              <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+                <stringProp name="ConstantTimer.delay">30000</stringProp>
+                <stringProp name="RandomTimer.range">2000</stringProp>
+              </GaussianRandomTimer>
+              <hashTree/>
+            </hashTree>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller">
+              <stringProp name="IfController.condition">${__groovy(!&quot;${sessionId}&quot;.equals(&quot;NOT_FOUND&quot;))}</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+              <boolProp name="IfController.useExpression">true</boolProp>
+            </IfController>
+            <hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Stripe Create Payment Method">
+                <stringProp name="HTTPSampler.domain">api.stripe.com</stringProp>
+                <stringProp name="HTTPSampler.protocol">https</stringProp>
+                <stringProp name="HTTPSampler.path">/v1/payment_methods</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">type=card&amp;card[number]=4242424242424242&amp;card[cvc]=123&amp;card[exp_month]=12&amp;card[exp_year]=28&amp;billing_details[name]=${username}&amp;billing_details[email]=${email}&amp;billing_details[address][country]=IN&amp;guid=7fc96669-7ebf-4b24-ac69-2458ca610af05f222e&amp;muid=827738bf-ae93-47d9-9826-af39fb444650a3ddb7&amp;sid=8ade6a3c-f356-4057-b2b8-5cd7ce2edee0ca8f51&amp;key=pk_test_51OZTlbAAtoXzf0GIhnmZZb3hDLuWrSbi81KQB7VtJ3RUWT3tYyoIuyQ5NG2fcfnv9h4xYPNh6OqygpfwZeaZanda00TC2lpWjo&amp;payment_user_agent=stripe.js%2F938f156d0f%3B+stripe-js-v3%2F938f156d0f%3B+checkout&#xd;
+</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+                  <collectionProp name="HeaderManager.headers">
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">accept</stringProp>
+                      <stringProp name="Header.value">application/json</stringProp>
+                    </elementProp>
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">content-type</stringProp>
+                      <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
+                    </elementProp>
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">origin</stringProp>
+                      <stringProp name="Header.value">https://checkout.stripe.com</stringProp>
+                    </elementProp>
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">referer</stringProp>
+                      <stringProp name="Header.value">https://checkout.stripe.com/</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </HeaderManager>
+                <hashTree/>
+                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="paymentMethod">
+                  <stringProp name="JSONPostProcessor.referenceNames">paymentMethod</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">$.id</stringProp>
+                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                  <stringProp name="JSONPostProcessor.defaultValues">NOT_FOUND</stringProp>
+                </JSONPostProcessor>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Stripe payment confirm">
+                <stringProp name="HTTPSampler.domain">api.stripe.com</stringProp>
+                <stringProp name="HTTPSampler.protocol">https</stringProp>
+                <stringProp name="HTTPSampler.path">/v1/payment_pages/${sessionId}/confirm</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">eid=NA&amp;payment_method=${paymentMethod}&amp;expected_amount=1999&amp;expected_payment_method_type=card&amp;guid=7fc96669-7ebf-4b24-ac69-2458ca610af05f222e&amp;muid=827738bf-ae93-47d9-9826-af39fb444650a3ddb7&amp;sid=8ade6a3c-f356-4057-b2b8-5cd7ce2edee0ca8f51&amp;key=pk_test_51OZTlbAAtoXzf0GIhnmZZb3hDLuWrSbi81KQB7VtJ3RUWT3tYyoIuyQ5NG2fcfnv9h4xYPNh6OqygpfwZeaZanda00TC2lpWjo&amp;version=938f156d0f&amp;init_checksum=aFUV3FOL7JChuLJ8g2IEukvIpIS3LE91&amp;js_checksum=qto~d%5En0%3DQU%3Eazbu%5Dcdb%7Bn%5C%60%5DPnb%7Boq%3DX%3C%5Cv%24%7Cd_a%24db+Pl%25o%3FU%5E%60w&amp;passive_captcha_token=P1_eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwZCI6MCwiZXhwIjoxNzUwOTI1Nzc2LCJjZGF0YSI6InJmN3FzV3dOMmt6OS9uT0NtNURMM2E5b2tEUE9mQzlCcmJPNlBMY1F4Y0ZkVnN3aFUvMVBRY3QrU3N2eWdFeHZNN2crYWdoTXF1dUZSQ25uRmJTV1hTM1BZOCtUUGdtbnFUZGI3Qy9oSnNrMS9UZFRTeGp3bngvZk5EVVZBSE9PKy9vbU9VYTAwa1g5eWhtdTZuU3p6VUMyRXRIUno1ZFA5VnRReWdlWHlWNnJ6akF6a1NVdTlGTGdOSFc3SFFMNHlBanRTWm5yQzFEblpvYUZ0aGh4YWx6VkdYbGhqWTlEIiwicGFzc2tleSI6InYzN1N0UGoyeXZmak1mR1k1SS9QN2lBa1NaR25WYWlTcHRKQjVEczRRQ1FSRFowM3ZNaTJWUXBSYlpGeW94dkZvTFZibml0K2RGemhuRTZBOTBscXcvRVROeWd3R2FWNGlJWkVFcDFRNFBNOFdkckFVMXlyWUVSN1dTMU1qWXR2MmwxaFp0eDBYUk1VUVcyR2NUSEFzNnNuUVlCWUpBdE9GNjBYaGxzY3hJY3h5TG5rbEMzMldBUUJWeDlGejFWdDQ0WXVlTE9XSkhUWlg2RWw2RzQvUFkrekQxeTBjOVhGTTRsR2hsWEdrVkdNODhUbGtyQjl5dG0zN1ZFemRiUkRDdFpLTWd0R0IwYTJmdC9MbEc0MHo2V1lTaVBZMGtHWDRkS2p5T21lUzBVUDJDMFFPMzgrUXcxQjBLQnhpREg0SFlmVndkVXJva2RqS2RKQzROMEtGWHBlTENvQzBqL0NSM3lVV2VPajhEaEgraHZqN3lYZG4zcUt3amMwUkozdG4wLzcxWnJFMG1nWEdxVkhZVkdqcnZyUUE1TU5lZENWZnh4L1UxWXh5eWJpYjEyTUNTMlJxQXVKdVVobjZScHJ5T0JWVzI0YTB4VzZEK3pKdnhhYlJ6Qkk4SUNWZnYzaERPTWwzLzd6M3VBbldXZFFnb1Q3bkVHdEc3cUtEUWhxU3R2c3VpQ3Z3cW9WT3l1RnJMQjMwMEVwMkhCQU5uYVg1Z2hTZFdsRThrR2tyd0lWTnVPSlllUzltTXM3MUEwNlY4c0pmNWwrZFBpdmdRdXkzMlNoeitOVzhhQVFIOC9SUWhFT0xBY0p5bWdqNVQ3Nk55Q0puTnBWblNDMGNBRXVaZWNLMDEzK21uY1ZOWVRaMXNkSnQ5Wjc1QnhZVUk2dDJQR3hrNDVKWEhIdC9QT0F5cjlOcHVNNkpsRHlid1BURmR2aXdmaVAvcDRyTXVmOTlnNE9nY1lEN3ZtaTJZOWdjSnVCTWM5eXdvR1VPZkZnTWxuN1c5dzU4UGp1RG9Xd2h2TEJHbjVOWGJ5bXFjTEdVNU9WenhjUFZqUEY2d0NOYWtlZFY3THNsVzRyZlVSNVB1d3VGZFFmazZNenl3NEg2VFZsZUUzSWlBd0w3dTdnWHkwVmdCR1U5MUdPbmZYZ2lOWTJ0Z0F2WHc0RWlKbFlFZkN0bUQycUZnRTl1ZDJtNGIyT0ltOXJDNERyQk5NSkFZdUFObS81eitEL2IvOGNjUXNXSkNLNWRrVzRuVjZGV0pHeEtlNytFKzBhZlZqOFZDSE9TV0U3ZUQ5cklucmh6UkhCOExKY3ovc050M1dJOXZSMVFwS1ArWnozcHBaQTZIeXdhSXdrWTVnUUxXR1EwWTV0Uzl1Vjh6N1MxakhER2tiTnhGSmxzU3A3RndhYXNMbi9KT3llNjRETFlSSWtDSU1nRWxjUTJERFY1Q0prTWg0Ym1tR3JzVGdsUkZnRTdxQVEzMUdrSk5PVDZrd016MDRNV2ZyK2t6WHY1S2RleWFQTllVeU5sTU5tZHp5eWVSUHExQ2gxamFoWFBJMzRGaFVwVzk0WkFkKzZaOEUrT2V3bDNIa01DeXUyMTZ2RFZZVG1sM1RZWEdCRTlVeUc3VXQzUmNIU2pjbS9Wb2hzQWdvRGxBUHhITXVNSXN2b3AxRUtWODdLNUpqK1RpK0NpblY2R2RSMHl2RDEzcHh3UHU1M0FtQWZrNkN1MGJIL0FCQ1JTNEJ6aEswZzZva0IrUHhvSWFDR3VwZGlFN1NoZnQyenduZFh6ODh3amxyUHk3YkdqWTJtcFJaMThrbFRBeTVBcWlMNW42TGdlSUg1aGlBclRVWFo1TlF4T3dyUzZHbUQyVXErZXVQcSt3Ni85R1ZnaTZPVkMvUHkxS3BHVzhhbW5OeXZaanVzTU8wRmgvUjVoVUZVRlBxRWF3N1JuQlN5eSs4VHIyMnZmaVkzSXdsdmx2cm5iUGlDaFJXL0ZVZlhQbWNXeDJ0UVdZVmxkS0Z4MzNFWHQveTNIaityMEF1d3g0VjN0cTBYVTFShow more</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+                  <collectionProp name="HeaderManager.headers">
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">accept</stringProp>
+                      <stringProp name="Header.value">application/json</stringProp>
+                    </elementProp>
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">content-type</stringProp>
+                      <stringProp name="Header.value">application/x-www-form-urlencoded</stringProp>
+                    </elementProp>
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">origin</stringProp>
+                      <stringProp name="Header.value">https://checkout.stripe.com</stringProp>
+                    </elementProp>
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">referer</stringProp>
+                      <stringProp name="Header.value">https://checkout.stripe.com/</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </HeaderManager>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="update-subscription-from-session">
+                <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+                <stringProp name="HTTPSampler.protocol">https</stringProp>
+                <stringProp name="HTTPSampler.path">/api/update-subscription-from-session</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">{&#xd;
+  &quot;sessionId&quot;: &quot;${sessionId}&quot;&#xd;
+}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+                  <stringProp name="ConstantTimer.delay">30000</stringProp>
+                  <stringProp name="RandomTimer.range">2000</stringProp>
+                </GaussianRandomTimer>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="analyze">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/analyze</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{ &#xd;
+&quot;patientAge&quot;: 45, &#xd;
+&quot;gender&quot;: &quot;Male&quot;, &#xd;
+&quot;chiefComplaint&quot;: &quot;Chest pain&quot;, &#xd;
+&quot;symptoms&quot;: &quot;Radiating pain to left arm, shortness of breath&quot;, &quot;vitals&quot;: &quot;BP: 140/90, HR: 100, RR: 22, Temp: 98.6F&quot;, &#xd;
+&quot;medicalHistory&quot;: &quot;Hypertension, diabetes&quot;, &#xd;
+&quot;currentMedications&quot;: &quot;Lisinopril, Metformin&quot; &#xd;
+} &#xd;
+</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="parse blood report">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/parse-blood-report</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">true</boolProp>
+            <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
+              <collectionProp name="HTTPFileArgs.files">
+                <elementProp name="C:\Users\srivi\Downloads\Sample reports-20250605T183131Z-1-001\Sample reports\CBC-sample 1.pdf" elementType="HTTPFileArg">
+                  <stringProp name="File.mimetype">application/pdf</stringProp>
+                  <stringProp name="File.path">C:\Users\srivi\Downloads\Sample reports-20250605T183131Z-1-001\Sample reports\CBC-sample 1.pdf</stringProp>
+                  <stringProp name="File.paramname">file</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="generate followup">
+            <stringProp name="HTTPSampler.domain">manan.numpyninja.com</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/generate-followup</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&quot;analysis&quot;:&quot;1. TRIAGE LEVEL  \nEMERGENCY  \nClinical justification: The patient presents with classic signs of an acute ST-elevation myocardial infarction (STEMI)—persistent (&gt;30 min) central, pressure-like chest pain radiating to left arm/jaw, diaphoresis, nausea, dyspnea, feeling of doom—along with hemodynamic compromise (hypotension 92/60 mmHg, tachycardia 110 bpm, SpO₂ 91%) and elevated troponin I. Immediate reperfusion is critical to limit myocardial damage and prevent cardiogenic shock or fatal arrhythmias.\n\n2. TOP 3–5 POSSIBLE DIAGNOSES (ranked by likelihood)  \n1. Acute inferior wall STEMI (likely right coronary artery occlusion)  \n2. Cardiogenic shock secondary to extensive myocardial infarction  \n3. Acute right ventricular infarction (inferior MI can involve RV, exacerbating hypotension)  \n4. Ventricular arrhythmia (e.g., accelerated idioventricular rhythm, VT/VF) complicating MI  \n5. Less likely alternatives—pulmonary embolism, acute aortic syndrome\n\n3. KEY CLINICAL CONCERNS AND RISK FACTORS  \n• Hemodynamic instability: hypotension, tachycardia, low oxygen saturation  \n• Risk of cardiogenic shock, mechanical complications (papillary muscle rupture, VSD)  \n• Risk factors for coronary artery disease: age &gt;60, hypertension, diabetes mellitus, hyperlipidemia, smoking history (30 pack-years), family history of premature MI  \n• Potential right ventricular involvement (inferior STEMI + hypotension + clear lungs)  \n• Elevated troponin and ongoing ischemia increase risk of malignant arrhythmias  \n\n4. IMMEDIATE ACTIONS/INTERVENTIONS NEEDED  \n• Activate “code STEMI” for emergent percutaneous coronary intervention (PCI) within 90 minutes of first medical contact  \n• Aspirin 325 mg chewable immediately (if not already taken) + P2Y12 inhibitor (e.g., ticagrelor/clopidogrel loading dose)  \n• Unfractionated heparin bolus (or low–molecular-weight heparin per ACS protocol)  \n• Supplemental oxygen to maintain SpO₂ &gt;94% (use just enough O₂; avoid hyperoxia)  \n• Pain and anxiety control: IV morphine cautiously if persistent pain  \n• Nitrates: hold or use very cautiously in hypotension; assess for right ventricular MI via right-sided leads before nitrates  \n• Continuous cardiac monitoring; establish at least two large-bore IV lines  \n• Prepare for potential advanced cardiac life support (ACLS) if arrhythmia develops  \n\n5. RECOMMENDED DIAGNOSTIC TESTS  \n• Immediate bedside echocardiogram: assess wall motion, RV involvement, ejection fraction, mechanical complications  \n• Right-sided ECG leads (V₄R) to confirm RV infarction  \n• Serial cardiac biomarkers (troponin every 3–6 hours)  \n• Chest X-ray: evaluate heart size, pulmonary edema, aortic contour  \n• Basic labs: complete metabolic panel, coagulation profile, BNP, repeat CBC if warranted  \n• Arterial blood gas if respiratory compromise worsens  \n• Coronary angiography in the cath lab  \n\n6. SPECIALIST REFERRAL RECOMMENDATIONS  \n• Interventional cardiology: emergent PCI  \n• Critical care/cardiac intensive care unit (post-PCI monitoring)  \n• If mechanical complication suspected (VSD, papillary muscle rupture): cardiothoracic surgery consult  \n• Cardiac rehabilitation team (post-acute phase)  \n\n7. WARNING SIGNS REQUIRING ESCALATION  \n• Sudden worsening hypotension or bradycardia (signs of cardiogenic shock or conduction block)  \n• New or worsening pulmonary edema (acute heart failure)  \n• Development of high-grade AV block, ventricular tachyarrhythmias, or ventricular fibrillation  \n• New harsh systolic murmur (papillary muscle rupture, VSD)  \n• Recurrent or refractory chest pain despite therapy  \n• Altered mental status, oliguria/anuria (end-organ hypoperfusion)  \n• Signs of mechanical complications: acute mitral regurgitation (pulmonary edema), septal rupture (biventricular failure)&quot;}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="refine analysis">
+            <stringProp name="HTTPSampler.domain">manan.numpyninja.com</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/refine-analysis</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&quot;analysis&quot;:&quot;1. TRIAGE LEVEL  \nEMERGENCY  \nClinical justification: The patient presents with classic signs of an acute ST-elevation myocardial infarction (STEMI)—persistent (&gt;30 min) central, pressure-like chest pain radiating to left arm/jaw, diaphoresis, nausea, dyspnea, feeling of doom—along with hemodynamic compromise (hypotension 92/60 mmHg, tachycardia 110 bpm, SpO₂ 91%) and elevated troponin I. Immediate reperfusion is critical to limit myocardial damage and prevent cardiogenic shock or fatal arrhythmias.\n\n2. TOP 3–5 POSSIBLE DIAGNOSES (ranked by likelihood)  \n1. Acute inferior wall STEMI (likely right coronary artery occlusion)  \n2. Cardiogenic shock secondary to extensive myocardial infarction  \n3. Acute right ventricular infarction (inferior MI can involve RV, exacerbating hypotension)  \n4. Ventricular arrhythmia (e.g., accelerated idioventricular rhythm, VT/VF) complicating MI  \n5. Less likely alternatives—pulmonary embolism, acute aortic syndrome\n\n3. KEY CLINICAL CONCERNS AND RISK FACTORS  \n• Hemodynamic instability: hypotension, tachycardia, low oxygen saturation  \n• Risk of cardiogenic shock, mechanical complications (papillary muscle rupture, VSD)  \n• Risk factors for coronary artery disease: age &gt;60, hypertension, diabetes mellitus, hyperlipidemia, smoking history (30 pack-years), family history of premature MI  \n• Potential right ventricular involvement (inferior STEMI + hypotension + clear lungs)  \n• Elevated troponin and ongoing ischemia increase risk of malignant arrhythmias  \n\n4. IMMEDIATE ACTIONS/INTERVENTIONS NEEDED  \n• Activate “code STEMI” for emergent percutaneous coronary intervention (PCI) within 90 minutes of first medical contact  \n• Aspirin 325 mg chewable immediately (if not already taken) + P2Y12 inhibitor (e.g., ticagrelor/clopidogrel loading dose)  \n• Unfractionated heparin bolus (or low–molecular-weight heparin per ACS protocol)  \n• Supplemental oxygen to maintain SpO₂ &gt;94% (use just enough O₂; avoid hyperoxia)  \n• Pain and anxiety control: IV morphine cautiously if persistent pain  \n• Nitrates: hold or use very cautiously in hypotension; assess for right ventricular MI via right-sided leads before nitrates  \n• Continuous cardiac monitoring; establish at least two large-bore IV lines  \n• Prepare for potential advanced cardiac life support (ACLS) if arrhythmia develops  \n\n5. RECOMMENDED DIAGNOSTIC TESTS  \n• Immediate bedside echocardiogram: assess wall motion, RV involvement, ejection fraction, mechanical complications  \n• Right-sided ECG leads (V₄R) to confirm RV infarction  \n• Serial cardiac biomarkers (troponin every 3–6 hours)  \n• Chest X-ray: evaluate heart size, pulmonary edema, aortic contour  \n• Basic labs: complete metabolic panel, coagulation profile, BNP, repeat CBC if warranted  \n• Arterial blood gas if respiratory compromise worsens  \n• Coronary angiography in the cath lab  \n\n6. SPECIALIST REFERRAL RECOMMENDATIONS  \n• Interventional cardiology: emergent PCI  \n• Critical care/cardiac intensive care unit (post-PCI monitoring)  \n• If mechanical complication suspected (VSD, papillary muscle rupture): cardiothoracic surgery consult  \n• Cardiac rehabilitation team (post-acute phase)  \n\n7. WARNING SIGNS REQUIRING ESCALATION  \n• Sudden worsening hypotension or bradycardia (signs of cardiogenic shock or conduction block)  \n• New or worsening pulmonary edema (acute heart failure)  \n• Development of high-grade AV block, ventricular tachyarrhythmias, or ventricular fibrillation  \n• New harsh systolic murmur (papillary muscle rupture, VSD)  \n• Recurrent or refractory chest pain despite therapy  \n• Altered mental status, oliguria/anuria (end-organ hypoperfusion)  \n• Signs of mechanical complications: acute mitral regurgitation (pulmonary edema), septal rupture (biventricular failure)&quot;,&quot;followUpResponses&quot;:{}}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="user subscription">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">api/user/subscription</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="subscription">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">api/subscription</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get all cases">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/cases</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get learning modules">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/learning/modules</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get learning achievements">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/learning/achievements</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get learning stats">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/learning/stats</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get user settings">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/user/settings</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="post user settings">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/user/settings</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+  &quot;emailNotifications&quot;: &quot;false&quot;,&#xd;
+  &quot;appNotifications&quot;: &quot;false&quot;&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="get doctors">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/doctors</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller">
+            <stringProp name="IfController.condition">${isActive}</stringProp>
+            <boolProp name="IfController.evaluateAll">false</boolProp>
+            <boolProp name="IfController.useExpression">true</boolProp>
+          </IfController>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="cancel-subscription">
+              <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+              <stringProp name="HTTPSampler.protocol">https</stringProp>
+              <stringProp name="HTTPSampler.path">/api/cancel-subscription</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+                <collectionProp name="Arguments.arguments"/>
+              </elementProp>
+            </HTTPSamplerProxy>
+            <hashTree/>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <JMeter.plugins.functional.samplers.websocket.WebSocketSampler guiclass="JMeter.plugins.functional.samplers.websocket.WebSocketSamplerGui" testclass="JMeter.plugins.functional.samplers.websocket.WebSocketSampler" testname="WebSocket Sampler">
+            <stringProp name="serverAddress">${BASE_URL}</stringProp>
+            <stringProp name="serverPort">443</stringProp>
+            <stringProp name="implementation">RFC6455 (v13)</stringProp>
+            <stringProp name="protocol">wss</stringProp>
+            <stringProp name="contextPath">/monitor</stringProp>
+            <stringProp name="contentEncoding">UTF-8</stringProp>
+            <stringProp name="requestPayload">{&quot;type&quot;: &quot;document_update&quot;,&quot;text&quot;: &quot;Patient presents with fever 102F, cough for 5 days&quot;, &quot;source&quot;: &quot;client&quot;}</stringProp>
+            <stringProp name="connectionTimeout">30000</stringProp>
+            <stringProp name="responseTimeout">30000</stringProp>
+            <boolProp name="ignoreSslErrors">false</boolProp>
+            <boolProp name="streamingConnection">false</boolProp>
+            <stringProp name="connectionId"></stringProp>
+            <stringProp name="responsePattern"></stringProp>
+            <stringProp name="closeConncectionPattern"></stringProp>
+            <stringProp name="proxyAddress"></stringProp>
+            <stringProp name="proxyPassword"></stringProp>
+            <stringProp name="proxyPort"></stringProp>
+            <stringProp name="proxyUsername"></stringProp>
+            <stringProp name="messageBacklog">3</stringProp>
+            <elementProp name="queryStringParameters" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </JMeter.plugins.functional.samplers.websocket.WebSocketSampler>
+          <hashTree>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Validate Analysis Update Type" enabled="false">
+              <stringProp name="JSON_PATH">$.type</stringProp>
+              <stringProp name="EXPECTED_VALUE">analysis_update</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">false</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+            <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+              <stringProp name="ConstantTimer.delay">30000</stringProp>
+              <stringProp name="RandomTimer.range">2000</stringProp>
+            </GaussianRandomTimer>
+            <hashTree/>
+          </hashTree>
+          <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="WebSocket Open Connection" enabled="false">
+            <boolProp name="TLS">true</boolProp>
+            <stringProp name="server">${BASE_URL}</stringProp>
+            <stringProp name="port">443</stringProp>
+            <stringProp name="path">/monitor</stringProp>
+            <stringProp name="connectTimeout">20000</stringProp>
+            <stringProp name="readTimeout">6000</stringProp>
+          </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="logout">
+            <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
+            <stringProp name="HTTPSampler.protocol">https</stringProp>
+            <stringProp name="HTTPSampler.path">/api/logout</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="JSON Assertion">
+              <stringProp name="JSON_PATH">$.message</stringProp>
+              <stringProp name="EXPECTED_VALUE">Logout successful</stringProp>
+              <boolProp name="JSONVALIDATION">true</boolProp>
+              <boolProp name="EXPECT_NULL">false</boolProp>
+              <boolProp name="INVERT">false</boolProp>
+              <boolProp name="ISREGEX">true</boolProp>
+            </JSONPathAssertion>
+            <hashTree/>
+          </hashTree>
+          <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer">
+            <stringProp name="ConstantTimer.delay">3000</stringProp>
+            <stringProp name="RandomTimer.range">2000</stringProp>
+          </GaussianRandomTimer>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Content-Type</stringProp>
+            <stringProp name="Header.value">application/json</stringProp>
+          </elementProp>
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Accept</stringProp>
+            <stringProp name="Header.value">application/json</stringProp>
+          </elementProp>
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Origin</stringProp>
+            <stringProp name="Header.value">https://manan.numpyninja.com</stringProp>
+          </elementProp>
+        </collectionProp>
+      </HeaderManager>
+      <hashTree/>
+      <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager">
+        <collectionProp name="CookieManager.cookies"/>
+        <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+        <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
+      </CookieManager>
+      <hashTree/>
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="BASE_URL" elementType="Argument">
+            <stringProp name="Argument.name">BASE_URL</stringProp>
+            <stringProp name="Argument.value">manan.numpyninja.com</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </Arguments>
+      <hashTree/>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename">C:\Users\srivi\Downloads\jmeter project\results_new.jtl</stringProp>
+      </ResultCollector>
+      <hashTree/>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

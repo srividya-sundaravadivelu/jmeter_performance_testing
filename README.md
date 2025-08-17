@@ -79,3 +79,18 @@ Update data.csv for desired user load
 Modify manan_api_test.jmx for your API endpoints
 
 Commit & push → GitHub Actions will run tests automatically
+
+## Report Screenshots
+
+
+<img width="1905" height="1015" alt="image" src="https://github.com/user-attachments/assets/63b164ce-3339-4a05-8432-199f6278ba76" />
+
+
+<img width="1899" height="1015" alt="image" src="https://github.com/user-attachments/assets/930259a6-b9a0-4664-bdb2-b679571b571d" />
+
+<img width="1918" height="1014" alt="image" src="https://github.com/user-attachments/assets/5658e2ed-8bf9-43f0-b38d-056e3f5f3392" />
+
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/6d377691-cde2-4796-9e76-c7a8e73d6990" />
+
+
+

@@ -1,6 +1,6 @@
 # JMeter Performance Testing – Manan Application
 
-This repository contains a JMeter performance testing project for the Manan application. https://manan.numpyninja.com/
+This repository contains a JMeter performance testing project for the Manan application. 
 The goal is to simulate concurrent user load, monitor API performance, and generate HTML reports automatically using GitHub Actions CI/CD.
 
 ## Test Plan Details

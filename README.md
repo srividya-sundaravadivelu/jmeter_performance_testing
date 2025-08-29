@@ -7,8 +7,6 @@ The goal is to simulate concurrent user load, monitor API performance, and gener
 
 Test Tool: Apache JMeter 5.6.3
 
-Application Under Test (AUT): https://manan.numpyninja.com
-
 Test Plan: manan_api_test.jmx
 
 Test Data: data.csv (defines number of users)
